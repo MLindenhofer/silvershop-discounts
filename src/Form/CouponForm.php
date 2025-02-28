@@ -54,6 +54,7 @@ class CouponForm extends Form
         // form validation has passed by this point, so we can save data
         $this->config->setData($form->getData());
 
+        //Recalculate the order
         $order = $this->config->getOrder();
         if ($order){
             $order->calculate();
