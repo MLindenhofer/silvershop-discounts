@@ -54,6 +54,12 @@ class CouponForm extends Form
         // form validation has passed by this point, so we can save data
         $this->config->setData($form->getData());
 
+        //Recalculate the order
+        $order = $this->config->getOrder();
+        if ($order){
+            $order->calculate();
+        }
+
         return $this->controller->redirectBack();
     }
 
@@ -65,6 +71,7 @@ class CouponForm extends Form
 
         if ($order) {
             $order->removeDiscounts();
+            $order->calculate();
         }
 
         return $this->controller->redirectBack();
