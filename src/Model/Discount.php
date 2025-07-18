@@ -130,8 +130,8 @@ class Discount extends DataObject implements PermissionProvider
             //amount or percent > 0
             ->filterAny(
                 [
-                'Amount:GreaterThan' => 0,
-                'Percent:GreaterThan' => 0
+                    'Amount:GreaterThan' => 0,
+                    'Percent:GreaterThan' => 0
                 ]
             );
 
@@ -161,55 +161,55 @@ class Discount extends DataObject implements PermissionProvider
         //fields that shouldn't be changed once coupon is used
         $fields = new FieldList(
             [
-            new TabSet(
-                'Root',
-                new Tab(
-                    'Main',
-                    TextField::create('Title'),
-                    CheckboxField::create('Active', 'Active')
-                        ->setDescription('Enable/disable all use of this discount.'),
-                    HeaderField::create('ActionTitle', 'Action', 3),
-                    $typefield = SelectionGroup::create(
-                        'Type',
-                        [
-                        new SelectionGroup_Item(
-                            'Percent',
-                            $percentgroup = FieldGroup::create(
-                                $percentfield = NumericField::create('Percent', 'Percentage', '0.00')
-                                    ->setScale(null)
-                                    ->setDescription('e.g. 0.05 = 5%, 0.5 = 50%, and 5 = 500%'),
-                                $maxamountfield = CurrencyField::create(
-                                    'MaxAmount',
-                                    _t('MaxAmount', 'Maximum Amount')
-                                )->setDescription(
-                                    'The total allowable discount. 0 means unlimited.'
+                new TabSet(
+                    'Root',
+                    new Tab(
+                        'Main',
+                        TextField::create('Title'),
+                        CheckboxField::create('Active', 'Active')
+                            ->setDescription('Enable/disable all use of this discount.'),
+                        HeaderField::create('ActionTitle', 'Action', 3),
+                        $typefield = SelectionGroup::create(
+                            'Type',
+                            [
+                                new SelectionGroup_Item(
+                                    'Percent',
+                                    $percentgroup = FieldGroup::create(
+                                        $percentfield = NumericField::create('Percent', 'Percentage', '0.00')
+                                            ->setScale(null)
+                                            ->setDescription('e.g. 0.05 = 5%, 0.5 = 50%, and 5 = 500%'),
+                                        $maxamountfield = CurrencyField::create(
+                                            'MaxAmount',
+                                            _t('MaxAmount', 'Maximum Amount')
+                                        )->setDescription(
+                                            'The total allowable discount. 0 means unlimited.'
+                                        )
+                                    ),
+                                    'Discount by percentage'
+                                ),
+                                new SelectionGroup_Item(
+                                    'Amount',
+                                    $amountfield = CurrencyField::create('Amount', 'Amount', '$0.00'),
+                                    'Discount by fixed amount'
                                 )
-                            ),
-                            'Discount by percentage'
-                        ),
-                        new SelectionGroup_Item(
-                            'Amount',
-                            $amountfield = CurrencyField::create('Amount', 'Amount', '$0.00'),
-                            'Discount by fixed amount'
+                            ]
+                        )->setTitle('Type'),
+                        OptionSetField::create(
+                            'For',
+                            'Applies to',
+                            [
+                                'Order' => 'Entire order',
+                                'Cart' => 'Cart subtotal',
+                                'Shipping' => 'Shipping subtotal',
+                                'Items' => 'Each individual item'
+                            ]
                         )
-                        ]
-                    )->setTitle('Type'),
-                    OptionSetField::create(
-                        'For',
-                        'Applies to',
-                        [
-                        'Order' => 'Entire order',
-                        'Cart' => 'Cart subtotal',
-                        'Shipping' => 'Shipping subtotal',
-                        'Items' => 'Each individual item'
-                        ]
+                    ),
+                    new Tab(
+                        'Constraints',
+                        TabSet::create('ConstraintsTabs', $general = new Tab('General', 'General'))
                     )
-                ),
-                new Tab(
-                    'Constraints',
-                    TabSet::create('ConstraintsTabs', $general = new Tab('General', 'General'))
                 )
-            )
             ]
         );
 
@@ -229,34 +229,34 @@ class Discount extends DataObject implements PermissionProvider
             $fields->addFieldsToTab(
                 'Root.Usage',
                 [
-                HeaderField::create('UseCount', sprintf("This discount has been used $count time%s.", $count > 1 ? 's' : '')),
-                GridField::create(
-                    'Orders',
-                    'Orders',
-                    $this->getAppliedOrders(),
-                    GridFieldConfig_RecordViewer::create()
-                        ->removeComponentsByType('GridFieldViewButton')
-                )
+                    HeaderField::create('UseCount', sprintf("This discount has been used $count time%s.", $count > 1 ? 's' : '')),
+                    GridField::create(
+                        'Orders',
+                        'Orders',
+                        $this->getAppliedOrders(),
+                        GridFieldConfig_RecordViewer::create()
+                            ->removeComponentsByType('GridFieldViewButton')
+                    )
                 ]
             );
         }
 
         if ($params && isset($params['forcetype'])) {
             $valuefield = $params['forcetype'] === 'Percent' ? $percentfield : $amountfield;
-            $fields->insertAfter($valuefield, 'Type');
+            $fields->insertAfter('Type', $valuefield);
             $fields->makeFieldReadonly('Type');
         } elseif ($this->Type && (double)$this->{$this->Type}) {
             $valuefield = $this->Type === 'Percent' ? $percentfield : $amountfield;
 
             $fields->makeFieldReadonly('Type');
-            $fields->insertAfter($valuefield, 'ActionTitle');
+            $fields->insertAfter('ActionTitle', $valuefield);
             $fields->replaceField(
                 $this->Type,
                 $valuefield->performReadonlyTransformation()
             );
 
             if ($this->Type === 'Percent') {
-                $fields->insertAfter($maxamountfield, 'Percent');
+                $fields->insertAfter('Percent', $maxamountfield);
             }
         }
 
@@ -276,8 +276,8 @@ class Discount extends DataObject implements PermissionProvider
                 'StartDate',
                 'Start Date',
                 [
-                DateField::create('q[StartDateFrom]', 'From'),
-                DateField::create('q[StartDateTo]', 'To')
+                    DateField::create('q[StartDateFrom]', 'From'),
+                    DateField::create('q[StartDateTo]', 'To')
                 ]
             )
         );
@@ -286,8 +286,8 @@ class Discount extends DataObject implements PermissionProvider
                 'EndDate',
                 'End Date',
                 [
-                DateField::create('q[EndDateFrom]', 'From'),
-                DateField::create('q[EndDateTo]', 'To')
+                    DateField::create('q[EndDateFrom]', 'From'),
+                    DateField::create('q[EndDateTo]', 'To')
                 ]
             )
         );
@@ -551,12 +551,12 @@ class Discount extends DataObject implements PermissionProvider
     {
         $itemsavings = $this->OrderItems()
             ->innerJoin('SilverShop_Order',
-                            '"SilverShop_OrderAttribute"."OrderID" = "SilverShop_Order"."ID"')
+                '"SilverShop_OrderAttribute"."OrderID" = "SilverShop_Order"."ID"')
             ->where('"SilverShop_Order"."Paid" IS NOT NULL')
             ->sum('DiscountAmount');
         $modifiersavings = $this->DiscountModifiers()
             ->innerJoin('SilverShop_Order',
-                            '"SilverShop_OrderAttribute"."OrderID" = "SilverShop_Order"."ID"')
+                '"SilverShop_OrderAttribute"."OrderID" = "SilverShop_Order"."ID"')
             ->where('"SilverShop_Order"."Paid" IS NOT NULL')
             ->sum('DiscountAmount');
 
