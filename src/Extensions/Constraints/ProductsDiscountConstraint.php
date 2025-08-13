@@ -102,7 +102,7 @@ class ProductsDiscountConstraint extends ItemDiscountConstraint
             foreach ($products as $product) {
                 // uses 'DiscountedProductID' since some subclasses of buyable could be used as the item product (such as
                 // a bundle) rather than the product stored.
-                if ($product->ID == $itemproduct->DiscountedProductID) {
+                if ($itemproduct && $product->ID == $itemproduct->DiscountedProductID) {
                     return true;
                 }
             }
