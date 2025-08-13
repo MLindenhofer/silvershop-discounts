@@ -4,6 +4,8 @@ namespace SilverShop\Discounts\Admin;
 
 use SilverShop\Reports\ShopPeriodReport;
 use SilverShop\Discounts\Model\Discount;
+use SilverShop\Reports\ShopReportQuery;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 class DiscountReport extends ShopPeriodReport
 {
@@ -38,7 +40,7 @@ class DiscountReport extends ShopPeriodReport
         return $cols;
     }
 
-    public function query($params)
+    public function query($params): ShopReportQuery|SQLSelect
     {
         $query = parent::query($params);
         $query->addSelect('"SilverShop_Discount".*')
