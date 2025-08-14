@@ -57,7 +57,7 @@ class GiftVoucherProduct extends Product
         return $fields;
     }
 
-    public function canPurchase($member = null, $quantity = 1)
+    public function canPurchase($member = null, $quantity = 1): bool
     {
         if (!self::config()->get('global_allow_purchase')) {
             return false;
