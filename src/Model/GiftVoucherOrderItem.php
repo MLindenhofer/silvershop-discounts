@@ -36,7 +36,7 @@ class GiftVoucherOrderItem extends OrderItem
     /**
      * Create vouchers on order payment success event
      */
-    public function onPayment()
+    public function onPayment(): void
     {
         parent::onPayment();
 
