@@ -6,6 +6,7 @@ use SilverShop\Discounts\Model\GiftVoucherOrderItem;
 use SilverShop\Page\Product;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
 
 /**
  * Gift voucher products, when purchased will send out a voucher code to the
@@ -26,7 +27,7 @@ class GiftVoucherProduct extends Product
 
     private static $table_name = 'SilverShop_GiftVoucherProduct';
 
-    public function getCMSFields()
+    public function getCMSFields(): FieldList
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
