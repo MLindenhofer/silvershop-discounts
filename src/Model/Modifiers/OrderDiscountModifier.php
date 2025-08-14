@@ -36,14 +36,14 @@ class OrderDiscountModifier extends OrderModifier
         'UsedCodes' => 'HTMLFragment'
     ];
 
-    public function value($incoming)
+    public function value($incoming): int|float
     {
         $this->Amount = $this->getDiscount();
 
         return $this->Amount;
     }
 
-    public function getDiscount()
+    public function getDiscount(): int|float
     {
         $context = [];
 
@@ -101,7 +101,7 @@ class OrderDiscountModifier extends OrderModifier
         );
     }
 
-    public function ShowInTable()
+    public function ShowInTable(): bool
     {
         return $this->Amount > 0;
     }
