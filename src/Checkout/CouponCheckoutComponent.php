@@ -16,7 +16,7 @@ class CouponCheckoutComponent extends CheckoutComponent
 {
     protected $validwhenblank = false;
 
-    public function getFormFields(Order $order)
+    public function getFormFields(Order $order): FieldList
     {
         $fields = FieldList::create(
             TextField::create(
