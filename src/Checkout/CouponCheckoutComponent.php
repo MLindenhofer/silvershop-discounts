@@ -61,8 +61,11 @@ class CouponCheckoutComponent extends CheckoutComponent
             throw new ValidationException($result);
         }
 
+        if (!$result->isValid()) {
+            throw ValidationException::create($result);
+        }
 
-        return $result;
+        return true;
     }
 
     public function getData(Order $order): array
@@ -77,5 +80,7 @@ class CouponCheckoutComponent extends CheckoutComponent
         Controller::curr()->getRequest()->getSession()->set('cart.couponcode', strtoupper($data['Code']));
 
         $order->getModifier(OrderDiscountModifier::class, true);
+
+        return $order;
     }
 }
